@@ -13,9 +13,9 @@ func CreateAdminSchedule() tgbotapi.InlineKeyboardMarkup {
 	for i := 0; i < 7; i++ {
 		t = t.Add(1 * time.Hour)
 		var keyboardrow []tgbotapi.InlineKeyboardButton
-		keyboardrow = append(keyboardrow, tgbotapi.NewInlineKeyboardButtonData(strconv.Itoa(t.Hour()) + ":" + strconv.Itoa(t.Hour() + 1), strconv.Itoa(t.Hour())))
+		keyboardrow = append(keyboardrow, tgbotapi.NewInlineKeyboardButtonData(strconv.Itoa(t.Hour()) + "00:" + strconv.Itoa(t.Hour() + 1) + ":00", "shedule"))
 		t = t.Add(1 * time.Hour)
-		keyboardrow = append(keyboardrow, tgbotapi.NewInlineKeyboardButtonData(t.GoString(), t.GoString()))
+		keyboardrow = append(keyboardrow, tgbotapi.NewInlineKeyboardButtonData(strconv.Itoa(t.Hour()) + "00:" + strconv.Itoa(t.Hour() + 1) + ":00", "shedule"))
 		keyboard = append(keyboard, keyboardrow)
 	}
 	return tgbotapi.NewInlineKeyboardMarkup(keyboard...)

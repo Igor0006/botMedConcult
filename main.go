@@ -27,7 +27,7 @@ func main() {
             }
             bot.Send(msg)
         } else if update.CallbackQuery != nil {
-            handlers.HandleCallbackQueryAdmin(bot, update.CallbackQuery)
+            handlers.HandleCallbackQuery(bot, update.CallbackQuery)
         }
     }
 

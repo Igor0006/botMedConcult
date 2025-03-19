@@ -11,7 +11,6 @@ func HandleCallbackQueryUser(bot *tgbotapi.BotAPI, callback *tgbotapi.CallbackQu
 	if _, err := bot.Request(callbackConfig); err != nil {
 		log.Println("Ошибка при обработке callback:", err)
 	}
-	
     editmsg := tgbotapi.NewEditMessageText(callback.Message.Chat.ID, callback.Message.MessageID, callback.Data)
     bot.Send(editmsg)
 }
