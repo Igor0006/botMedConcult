@@ -10,6 +10,9 @@ func HandleCallbackQueryAdmin(bot *tgbotapi.BotAPI, callback *tgbotapi.CallbackQ
 	if _, err := bot.Request(callbackConfig); err != nil {
 		log.Println("Ошибка при обработке callback:", err)
 	}
+	if callback.Data == "shedule" {
+		
+	}
     editmsg := tgbotapi.NewEditMessageTextAndMarkup(callback.Message.Chat.ID, callback.Message.MessageID, callback.Data, CreateAdminSchedule())
     bot.Send(editmsg)
 }
