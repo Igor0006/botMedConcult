@@ -8,17 +8,8 @@ import (
 	pq "github.com/lib/pq"
 )
 
-func HasFreeSlots(date string) bool{
-	connStr := fmt.Sprintf("postgres://%s:%s@localhost/%s?sslmode=disable", 
-	os.Getenv("USER"), os.Getenv("PASSWORD"), os.Getenv("DBNAME"))
-	db, _ := sql.Open("postgres", connStr)
-	var f bool
-	db.QueryRow("SELECT EXISTS (SELECT 1 FROM schedule WHERE date=$1)", date).Scan(&f)
-	return f
-}
 
-func AddFreeSlot(date string, time string) {
-	fmt.Println(date, time)
+func getDb() *sql.DB {
 	connStr := fmt.Sprintf("postgres://%s:%s@localhost/%s?sslmode=disable", 
 	os.Getenv("USER"), os.Getenv("PASSWORD"), os.Getenv("DBNAME"))
 	db, _ := sql.Open("postgres", connStr)
@@ -26,6 +17,27 @@ func AddFreeSlot(date string, time string) {
 	if err != nil {
 		log.Fatal("Ошибка проверки подключения:", err)
 	}
+	return db
+}
+func HasFreeSlots(date string) bool{
+	db := getDb()
+	defer db.Close()
+	var f bool
+	db.QueryRow("SELECT EXISTS (SELECT 1 FROM schedule WHERE date=$1)", date).Scan(&f)
+	return f
+}
+
+func GetFreeSlots(date string) {
+	db := getDb()
+	defer db.Close()
+	query := `SELECT free_slots FROM schedule where date = $1`
+	arr := []string{}
+	db.QueryRow(query, date).Scan(pq.Array(&arr))
+	
+	fmt.Println(arr)
+}
+func AddFreeSlot(date string, time string) {
+	db := getDb()
     defer db.Close()
 	
 	if HasFreeSlots(date) {

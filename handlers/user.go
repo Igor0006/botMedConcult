@@ -1,7 +1,10 @@
 package handlers
 
 import (
+	"fmt"
 	"log"
+	"medBot/database"
+
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
@@ -11,6 +14,8 @@ func HandleCallbackQueryUser(bot *tgbotapi.BotAPI, callback *tgbotapi.CallbackQu
 	if _, err := bot.Request(callbackConfig); err != nil {
 		log.Println("Ошибка при обработке callback:", err)
 	}
-    editmsg := tgbotapi.NewEditMessageText(callback.Message.Chat.ID, callback.Message.MessageID, callback.Data)
+	fmt.Println(callback.Data)
+	database.GetFreeSlots(callback.Data)
+    editmsg := tgbotapi.NewEditMessageTextAndMarkup(callback.Message.Chat.ID, callback.Message.MessageID, callback.Data, CreateMonthKeyboard(0))
     bot.Send(editmsg)
 }

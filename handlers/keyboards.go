@@ -8,7 +8,9 @@ import (
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
+// func CreaateUserSchedule() tgbotapi.InlineKeyboardMarkup {
 
+// }
 func CreateAdminSchedule() tgbotapi.InlineKeyboardMarkup {
 	t := time.Date(0, 0, 0, 8, 0, 0, 0, time.Now().Location())
 	var keyboard [][]tgbotapi.InlineKeyboardButton
