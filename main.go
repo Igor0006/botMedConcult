@@ -1,26 +1,17 @@
 package main
 
 import (
-    "database/sql"
 	"medBot/handlers"
 	"os"
-    "fmt"
+
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/joho/godotenv"
-    _ "github.com/lib/pq"
 )
 
 
 func main() {
     godotenv.Load()
-    psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-    "password=%s dbname=%s sslmode=disable",
-    "locqlhost", 5432, os.Getenv("USER"), os.Getenv("PASSWORD"), os.Getenv("DBNAME"))
-    db, err := sql.Open("postgres", psqlInfo)
-    if err != nil {
-        panic(err)
-    }
-defer db.Close()
+    // database.AddFreeSlot("2025-03-20", "15:00:00")
 	bot, _ := tgbotapi.NewBotAPI(os.Getenv("BOT_TOKEN"))
 
     updateConfig := tgbotapi.NewUpdate(0)

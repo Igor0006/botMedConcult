@@ -1,10 +1,12 @@
 package handlers
 
 import (
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"time"
 	"fmt"
+	"medBot/database"
 	"strconv"
+	"time"
+
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
 func CreateAdminSchedule() tgbotapi.InlineKeyboardMarkup {
@@ -13,11 +15,14 @@ func CreateAdminSchedule() tgbotapi.InlineKeyboardMarkup {
 	for i := 0; i < 7; i++ {
 		t = t.Add(1 * time.Hour)
 		var keyboardrow []tgbotapi.InlineKeyboardButton
-		keyboardrow = append(keyboardrow, tgbotapi.NewInlineKeyboardButtonData(strconv.Itoa(t.Hour()) + ":00-" + strconv.Itoa(t.Hour() + 1) + ":00", "shedule"))
+		keyboardrow = append(keyboardrow, tgbotapi.NewInlineKeyboardButtonData(strconv.Itoa(t.Hour()) + ":00-" + strconv.Itoa(t.Hour() + 1) + ":00", 
+		"schedule/" + strconv.Itoa(t.Hour()) + ":00:00"))
 		t = t.Add(1 * time.Hour)
-		keyboardrow = append(keyboardrow, tgbotapi.NewInlineKeyboardButtonData(strconv.Itoa(t.Hour()) + ":00-" + strconv.Itoa(t.Hour() + 1) + ":00", "shedule"))
+		keyboardrow = append(keyboardrow, tgbotapi.NewInlineKeyboardButtonData(strconv.Itoa(t.Hour()) + ":00-" + strconv.Itoa(t.Hour() + 1) + ":00", 
+		"schedule/" + strconv.Itoa(t.Hour()) + ":00:00"))
 		keyboard = append(keyboard, keyboardrow)
 	}
+	keyboard = append(keyboard, []tgbotapi.InlineKeyboardButton{tgbotapi.NewInlineKeyboardButtonData("↩Назад", "backToCalendar")})
 	return tgbotapi.NewInlineKeyboardMarkup(keyboard...)
 }
 func CreateMonthKeyboard(monthstep int) tgbotapi.InlineKeyboardMarkup {
@@ -46,7 +51,10 @@ func CreateMonthKeyboard(monthstep int) tgbotapi.InlineKeyboardMarkup {
         var keyboardrow []tgbotapi.InlineKeyboardButton
         for j := 0; j < 7; j++ {
             s := fmt.Sprintf("%2d ", currentDay.Day())
-            keyboardrow = append(keyboardrow, tgbotapi.NewInlineKeyboardButtonData(s, s))
+			if database.HasFreeSlots(string(currentDay.Format("2006-01-02"))) {
+				s = "| " + s + "|"
+			}
+            keyboardrow = append(keyboardrow, tgbotapi.NewInlineKeyboardButtonData(s, string(currentDay.Format("2006-01-02"))))
             currentDay = currentDay.AddDate(0, 0, 1)
 
         }
