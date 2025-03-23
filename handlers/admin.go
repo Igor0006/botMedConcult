@@ -10,15 +10,15 @@ import (
 var currentDay string
 func HandleCallbackQueryAdmin(bot *tgbotapi.BotAPI, callback *tgbotapi.CallbackQuery) {
     //Вспылвающее сообщение при нажатии на кнопку
-    callbackConfig := tgbotapi.NewCallback(callback.ID, "Вы нажали: "+callback.Data)
+    callbackConfig := tgbotapi.NewCallback(callback.ID, "")
 	if _, err := bot.Request(callbackConfig); err != nil {
 		log.Println("Ошибка при обработке callback:", err)
 	}
-	if strings.Split(callback.Data, "/")[0] == "schedule" {
-		database.AddFreeSlot(currentDay, strings.Split(callback.Data, "/")[1])
-	} else {
-		currentDay = callback.Data
-	}
+	if strings.Split(callback.Data, "/")[0] == "calendar" {
+		currentDate = strings.Split(callback.Data, "/")[1]
+	} else if strings.Split(callback.Data, "/")[0] == "schedule" {
+		database.AddFreeSlot(currentDate, strings.Split(callback.Data, "/")[1])
+	} 
 	var editmsg tgbotapi.EditMessageTextConfig
 	switch callback.Data {
 	case "backToCalendar":
