@@ -46,6 +46,9 @@ func CreateConfirmKeyboard() tgbotapi.InlineKeyboardMarkup{
 	return keyboard
 }
 func CreateMonthKeyboard(monthstep int) tgbotapi.InlineKeyboardMarkup {
+	months := map[int]string {
+		1: "Январь", 2: "Февраль", 3: "Март", 4: "Апрель", 5: "Май", 6: "Июнь", 7: "Июль", 8: "Август", 9: "Сентябрь", 10: "Октябрь", 11: "Ноябрь", 12: "Декабрь",
+	}
     now := time.Now()
 	year, month, _ := now.Date()
 
@@ -67,6 +70,7 @@ func CreateMonthKeyboard(monthstep int) tgbotapi.InlineKeyboardMarkup {
 	currentDay := firstOfMonth.AddDate(0, 0, -prevMonthDays)
 
     var keyboard [][]tgbotapi.InlineKeyboardButton
+	keyboard = append(keyboard, []tgbotapi.InlineKeyboardButton{tgbotapi.NewInlineKeyboardButtonData(months[int(month)], " ")})
     for i := 0; i < 6; i++ {
         var keyboardrow []tgbotapi.InlineKeyboardButton
         for j := 0; j < 7; j++ {

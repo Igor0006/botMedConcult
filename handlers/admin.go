@@ -7,7 +7,7 @@ import (
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
-var currentDay string
+var currentDayAdm string
 func HandleCallbackQueryAdmin(bot *tgbotapi.BotAPI, callback *tgbotapi.CallbackQuery) {
     //Вспылвающее сообщение при нажатии на кнопку
     callbackConfig := tgbotapi.NewCallback(callback.ID, "")
@@ -15,9 +15,9 @@ func HandleCallbackQueryAdmin(bot *tgbotapi.BotAPI, callback *tgbotapi.CallbackQ
 		log.Println("Ошибка при обработке callback:", err)
 	}
 	if strings.Split(callback.Data, "/")[0] == "calendar" {
-		currentDate = strings.Split(callback.Data, "/")[1]
+		currentDayAdm = strings.Split(callback.Data, "/")[1]
 	} else if strings.Split(callback.Data, "/")[0] == "schedule" {
-		database.AddFreeSlot(currentDate, strings.Split(callback.Data, "/")[1])
+		database.AddFreeSlot(currentDayAdm, strings.Split(callback.Data, "/")[1])
 	} 
 	var editmsg tgbotapi.EditMessageTextConfig
 	switch callback.Data {

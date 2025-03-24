@@ -26,13 +26,13 @@ func HandleCallbackQueryUser(bot *tgbotapi.BotAPI, callback *tgbotapi.CallbackQu
 	}
 	switch callback.Data {
 	case "backToCalendar":
-		editmsg = tgbotapi.NewEditMessageTextAndMarkup(callback.Message.Chat.ID, callback.Message.MessageID, "Выберите время", CreateMonthKeyboard(0))
+		editmsg = tgbotapi.NewEditMessageTextAndMarkup(callback.Message.Chat.ID, callback.Message.MessageID, "Выберите дату", CreateMonthKeyboard(0))
 	case "backToTime":
 		editmsg = tgbotapi.NewEditMessageTextAndMarkup(callback.Message.Chat.ID, callback.Message.MessageID, "Выберите время", CreateUserSchedule(currentDate))
 	case "confirm":
 		database.TakeTheTime(currentDate, currentTime)
 		database.MakeAppointment(currentDate + " " + currentTime, int(callback.From.ID), callback.From.UserName)
-		editmsg = tgbotapi.NewEditMessageTextAndMarkup(callback.Message.Chat.ID, callback.Message.MessageID, "Выберите время", CreateMonthKeyboard(0))
+		editmsg = tgbotapi.NewEditMessageTextAndMarkup(callback.Message.Chat.ID, callback.Message.MessageID, "Выберите дату", CreateMonthKeyboard(0))
 
 	}
 	database.GetFreeSlots(callback.Data)
