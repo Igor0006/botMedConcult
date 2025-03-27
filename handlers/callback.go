@@ -6,5 +6,5 @@ import(
 )
 
 func HandleCallbackQuery(bot *tgbotapi.BotAPI, callback * tgbotapi.CallbackQuery) {
-	middleware.IsAdminMiddleware(HandleCallbackQueryAdmin, HandleCallbackQueryUser)(bot, callback)
+	middleware.IsAdminMiddlewareCallback(HandleCallbackQueryAdmin, HandleCallbackQueryUser)(bot, callback)
 }

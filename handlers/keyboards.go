@@ -5,9 +5,11 @@ import (
 	"medBot/database"
 	"strconv"
 	"time"
-
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
+var months = map[int]string{
+	1: "Январь", 2: "Февраль", 3: "Март", 4: "Апрель", 5: "Май", 6: "Июнь", 7: "Июль", 8: "Август", 9: "Сентябрь", 10: "Октябрь", 11: "Ноябрь", 12: "Декабрь",
+}
 func CreateUserSchedule(date string) tgbotapi.InlineKeyboardMarkup {
 	arr := database.GetFreeSlots(date)
 	var keyboard [][]tgbotapi.InlineKeyboardButton
@@ -20,17 +22,32 @@ func CreateUserSchedule(date string) tgbotapi.InlineKeyboardMarkup {
 	keyboard = append(keyboard, []tgbotapi.InlineKeyboardButton{tgbotapi.NewInlineKeyboardButtonData("↩Назад", "backToCalendar")})
 	return tgbotapi.NewInlineKeyboardMarkup(keyboard...)
 }
-func CreateAdminSchedule() tgbotapi.InlineKeyboardMarkup {
+func contains(s []string, e string) bool {
+    for _, a := range s {
+        if a == e {
+            return true
+        }
+    }
+    return false
+}
+func CreateAdminSchedule(date string) tgbotapi.InlineKeyboardMarkup {
 	t := time.Date(0, 0, 0, 8, 0, 0, 0, time.Now().Location())
+	arr := database.GetFreeSlots(date)
+	fmt.Println(arr)
 	var keyboard [][]tgbotapi.InlineKeyboardButton
 	for i := 0; i < 7; i++ {
 		t = t.Add(1 * time.Hour)
 		var keyboardrow []tgbotapi.InlineKeyboardButton
-		keyboardrow = append(keyboardrow, tgbotapi.NewInlineKeyboardButtonData(strconv.Itoa(t.Hour()) + ":00-" + strconv.Itoa(t.Hour() + 1) + ":00", 
-		"schedule/" + strconv.Itoa(t.Hour()) + ":00:00"))
+
+		if !contains(arr, fmt.Sprintf("%02d:%02d:%02d", t.Hour(), t.Minute(), t.Second())) {
+			keyboardrow = append(keyboardrow, tgbotapi.NewInlineKeyboardButtonData(strconv.Itoa(t.Hour()) + ":00-" + strconv.Itoa(t.Hour() + 1) + ":00", 
+			"schedule/" + strconv.Itoa(t.Hour()) + ":00:00"))
+		}
 		t = t.Add(1 * time.Hour)
-		keyboardrow = append(keyboardrow, tgbotapi.NewInlineKeyboardButtonData(strconv.Itoa(t.Hour()) + ":00-" + strconv.Itoa(t.Hour() + 1) + ":00", 
-		"schedule/" + strconv.Itoa(t.Hour()) + ":00:00"))
+		if !contains(arr, fmt.Sprintf("%02d:%02d:%02d", t.Hour(), t.Minute(), t.Second())) {
+			keyboardrow = append(keyboardrow, tgbotapi.NewInlineKeyboardButtonData(strconv.Itoa(t.Hour()) + ":00-" + strconv.Itoa(t.Hour() + 1) + ":00", 
+			"schedule/" + strconv.Itoa(t.Hour()) + ":00:00"))
+		}
 		keyboard = append(keyboard, keyboardrow)
 	}
 	keyboard = append(keyboard, []tgbotapi.InlineKeyboardButton{tgbotapi.NewInlineKeyboardButtonData("↩Назад", "backToCalendar")})
@@ -45,10 +62,24 @@ func CreateConfirmKeyboard() tgbotapi.InlineKeyboardMarkup{
 	)
 	return keyboard
 }
+func CreateUserAppointment() tgbotapi.InlineKeyboardMarkup {
+	var keyboard = tgbotapi.NewInlineKeyboardMarkup(
+		tgbotapi.NewInlineKeyboardRow(
+			tgbotapi.NewInlineKeyboardButtonData("❌Отмена записи", "cancelApp"),
+			tgbotapi.NewInlineKeyboardButtonData("↩Назад", "backToCalendar"),
+		),
+	)
+	return keyboard
+}
+func NoAppointments() tgbotapi.InlineKeyboardMarkup {
+	var keyboard = tgbotapi.NewInlineKeyboardMarkup(
+		tgbotapi.NewInlineKeyboardRow(
+			tgbotapi.NewInlineKeyboardButtonData("↩Назад", "backToCalendar"),
+		),
+	)
+	return keyboard
+}
 func CreateMonthKeyboard(monthstep int) tgbotapi.InlineKeyboardMarkup {
-	months := map[int]string {
-		1: "Январь", 2: "Февраль", 3: "Март", 4: "Апрель", 5: "Май", 6: "Июнь", 7: "Июль", 8: "Август", 9: "Сентябрь", 10: "Октябрь", 11: "Ноябрь", 12: "Декабрь",
-	}
     now := time.Now()
 	year, month, _ := now.Date()
 

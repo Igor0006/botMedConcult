@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-func IsAdminMiddleware(nextAdmin func(botAPI *tgbotapi.BotAPI, callbackQuery *tgbotapi.CallbackQuery), 
+func IsAdminMiddlewareCallback(nextAdmin func(botAPI *tgbotapi.BotAPI, callbackQuery *tgbotapi.CallbackQuery), 
 					nextUser func(botAPI *tgbotapi.BotAPI, callbackQuery *tgbotapi.CallbackQuery)) func 
 (botAPI *tgbotapi.BotAPI, callbackQuery *tgbotapi.CallbackQuery) {
 	return func(botAPI *tgbotapi.BotAPI, callbackQuery *tgbotapi.CallbackQuery) {
@@ -14,6 +14,18 @@ func IsAdminMiddleware(nextAdmin func(botAPI *tgbotapi.BotAPI, callbackQuery *tg
 			nextAdmin(botAPI, callbackQuery)
 		} else {
 			nextUser(botAPI, callbackQuery)
+		}
+	}
+}
+
+func IsAdminMiddlewareUpdate(nextAdmin func(botAPI *tgbotapi.BotAPI, update *tgbotapi.Update), 
+					nextUser func(botAPI *tgbotapi.BotAPI, update *tgbotapi.Update)) func 
+(botAPI *tgbotapi.BotAPI, update *tgbotapi.Update) {
+	return func(botAPI *tgbotapi.BotAPI, update *tgbotapi.Update) {
+		if strconv.Itoa(int(update.Message.From.ID)) == os.Getenv("ADMIN_ID") {
+			nextAdmin(botAPI, update)
+		} else {
+			nextUser(botAPI, update)
 		}
 	}
 }

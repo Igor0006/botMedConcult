@@ -22,9 +22,9 @@ func HandleCallbackQueryAdmin(bot *tgbotapi.BotAPI, callback *tgbotapi.CallbackQ
 	var editmsg tgbotapi.EditMessageTextConfig
 	switch callback.Data {
 	case "backToCalendar":
-		editmsg = tgbotapi.NewEditMessageTextAndMarkup(callback.Message.Chat.ID, callback.Message.MessageID, callback.Data, CreateMonthKeyboard(0))
+		editmsg = tgbotapi.NewEditMessageTextAndMarkup(callback.Message.Chat.ID, callback.Message.MessageID, "Выберите дату", CreateMonthKeyboard(0))
 	default:
-		editmsg = tgbotapi.NewEditMessageTextAndMarkup(callback.Message.Chat.ID, callback.Message.MessageID, callback.Data, CreateAdminSchedule())
+		editmsg = tgbotapi.NewEditMessageTextAndMarkup(callback.Message.Chat.ID, callback.Message.MessageID, "Выберите время", CreateAdminSchedule(currentDayAdm))
 	}
     bot.Send(editmsg)
 }
