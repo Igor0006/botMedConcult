@@ -34,7 +34,7 @@ func AppointmentsAdmin(bot *tgbotapi.BotAPI, update *tgbotapi.Update) {
 	text := ""
 	for _, el := range data {
 		t, _ := time.Parse(time.RFC3339, el[0])
-		text += fmt.Sprintf("@%s в %d:%d %s %d\n", el[1], t.Hour(), t.Minute(), months[int(t.Month())], t.Day())
+		text += fmt.Sprintf("@%s в %d:00 %s %d\n", el[1], t.Hour(), months[int(t.Month())], t.Day())
 	}
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, text)
 	bot.Send(msg)

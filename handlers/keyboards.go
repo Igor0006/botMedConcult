@@ -3,8 +3,10 @@ package handlers
 import (
 	"fmt"
 	"medBot/database"
+	"medBot/lexicon"
 	"strconv"
 	"time"
+
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 var months = map[int]string{
@@ -121,3 +123,10 @@ func CreateMonthKeyboard(monthstep int) tgbotapi.InlineKeyboardMarkup {
 	))
     return tgbotapi.NewInlineKeyboardMarkup(keyboard...)
 }
+
+var Menu = tgbotapi.NewReplyKeyboard(
+    tgbotapi.NewKeyboardButtonRow(
+        tgbotapi.NewKeyboardButton(lexicon.Lex["init"]),
+        tgbotapi.NewKeyboardButton(lexicon.Lex["getAppointment"]),
+    ),
+)

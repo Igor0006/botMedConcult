@@ -20,6 +20,8 @@ func main() {
             handlers.HandleCallbackQuery(bot, update.CallbackQuery)
         }else if update.Message.IsCommand() {
             handlers.HandleCommand(bot, &update)
+        } else {
+            handlers.HandleMessage(bot, &update)
         }
     }
 
