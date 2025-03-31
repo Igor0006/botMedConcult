@@ -101,7 +101,7 @@ func CreateMonthKeyboard(monthstep int) tgbotapi.InlineKeyboardMarkup {
 	currentDay := firstOfMonth.AddDate(0, 0, -prevMonthDays)
 
     var keyboard [][]tgbotapi.InlineKeyboardButton
-	keyboard = append(keyboard, []tgbotapi.InlineKeyboardButton{tgbotapi.NewInlineKeyboardButtonData(months[int(month)], " ")})
+	keyboard = append(keyboard, []tgbotapi.InlineKeyboardButton{tgbotapi.NewInlineKeyboardButtonData(months[int(month) + monthstep], " ")})
     for i := 0; i < 6; i++ {
         var keyboardrow []tgbotapi.InlineKeyboardButton
         for j := 0; j < 7; j++ {

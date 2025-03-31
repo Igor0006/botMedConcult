@@ -4,7 +4,6 @@ import(
 	"medBot/middleware"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
-
 func HandleCommand(bot *tgbotapi.BotAPI, update *tgbotapi.Update) {
 	var msg tgbotapi.MessageConfig
 	switch update.Message.Command() {
@@ -14,4 +13,5 @@ func HandleCommand(bot *tgbotapi.BotAPI, update *tgbotapi.Update) {
 	case  "getAppointment":
 		middleware.IsAdminMiddlewareUpdate(AppointmentsAdmin, AppointmentsUser)(bot, update)
 	}
+	bot.Send(msg)
 }	

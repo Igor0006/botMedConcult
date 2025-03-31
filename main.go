@@ -12,7 +12,6 @@ import (
 func main() {
     godotenv.Load()
 	bot, _ := tgbotapi.NewBotAPI(os.Getenv("BOT_TOKEN"))
-
     updateConfig := tgbotapi.NewUpdate(0)
     updates := bot.GetUpdatesChan(updateConfig)
 

@@ -32,10 +32,20 @@ func HasFreeSlots(date string) bool{
 func GetFreeSlots(date string) []string {
 	db := getDb()
 	defer db.Close()
+	clean()
 	query := `SELECT free_slots FROM schedule where date = $1`
 	arr := []string{}
 	db.QueryRow(query, date).Scan(pq.Array(&arr))
 	return arr	
+}
+func clean() {
+	db := getDb()
+	defer db.Close()
+	now := time.Now().Format("2006-01-02")
+	db.Exec(`DELETE FROM schedule WHERE date < $1`, now)
+	now = time.Now().Add(-time.Hour).Format("2006-01-02 15:04:05")
+	db.Exec(`DELETE FROM appointments WHERE time < $1`, now)
+
 }
 func TakeTheTime(date string, time string) {
 	db := getDb()
