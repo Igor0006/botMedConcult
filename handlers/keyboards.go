@@ -115,5 +115,9 @@ func CreateMonthKeyboard(monthstep int) tgbotapi.InlineKeyboardMarkup {
         }
         keyboard = append(keyboard, keyboardrow)
     }
+	keyboard = append(keyboard, tgbotapi.NewInlineKeyboardRow(
+		tgbotapi.NewInlineKeyboardButtonData("<<", "prevMonth"),
+		tgbotapi.NewInlineKeyboardButtonData(">>", "nextMonth"),
+	))
     return tgbotapi.NewInlineKeyboardMarkup(keyboard...)
 }

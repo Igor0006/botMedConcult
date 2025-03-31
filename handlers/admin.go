@@ -1,19 +1,21 @@
 package handlers
 
 import (
+	"fmt"
 	"log"
 	"medBot/database"
 	"strings"
+	"time"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 var currentDayAdm string
 func HandleCallbackQueryAdmin(bot *tgbotapi.BotAPI, callback *tgbotapi.CallbackQuery) {
     //Вспылвающее сообщение при нажатии на кнопку
-    callbackConfig := tgbotapi.NewCallback(callback.ID, "")
-	if _, err := bot.Request(callbackConfig); err != nil {
-		log.Println("Ошибка при обработке callback:", err)
-	}
+    // callbackConfig := tgbotapi.NewCallback(callback.ID, "")
+	// if _, err := bot.Request(callbackConfig); err != nil {
+	// 	log.Println("Ошибка при обработке callback:", err)
+	// }
 	if strings.Split(callback.Data, "/")[0] == "calendar" {
 		currentDayAdm = strings.Split(callback.Data, "/")[1]
 	} else if strings.Split(callback.Data, "/")[0] == "schedule" {
@@ -27,4 +29,14 @@ func HandleCallbackQueryAdmin(bot *tgbotapi.BotAPI, callback *tgbotapi.CallbackQ
 		editmsg = tgbotapi.NewEditMessageTextAndMarkup(callback.Message.Chat.ID, callback.Message.MessageID, "Выберите время", CreateAdminSchedule(currentDayAdm))
 	}
     bot.Send(editmsg)
+}
+func AppointmentsAdmin(bot *tgbotapi.BotAPI, update *tgbotapi.Update) {
+	data := database.GetAppointmentsAdmin()
+	text := ""
+	for _, el := range data {
+		t, _ := time.Parse(time.RFC3339, el[0])
+		text += fmt.Sprintf("@%s в %d:%d %s %d\n", el[1], t.Hour(), t.Minute(), months[int(t.Month())], t.Day())
+	}
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, text)
+	bot.Send(msg)
 }

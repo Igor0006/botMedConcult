@@ -73,8 +73,18 @@ func GetAppointmentUser(userid int) time.Time{
 	parsedTime, _ := time.Parse("2006-01-02T15:04:05Z07:00", timeString)
 	return parsedTime
 }
-func GetAppointmentAdmin(userid int) {
-
+func GetAppointmentsAdmin() [][]string{
+	db := getDb()
+	defer db.Close()
+	rows, _ := db.Query(`SELECT time, contact FROM appointments`)
+	data := [][]string{}
+	for rows.Next() {
+		var timeString string
+		var username string
+		rows.Scan(&timeString, &username)
+		data = append(data, []string{timeString, username})
+	}
+	return data
 }
 func DeleteAppointment(userid int) {
 	db := getDb()

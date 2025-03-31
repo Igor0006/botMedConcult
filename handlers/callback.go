@@ -6,5 +6,12 @@ import(
 )
 
 func HandleCallbackQuery(bot *tgbotapi.BotAPI, callback * tgbotapi.CallbackQuery) {
+	callbackConfig := tgbotapi.NewCallback(callback.ID, "")
+	bot.Request(callbackConfig)
+	var editmsg tgbotapi.EditMessageTextConfig
+	switch callback.Data {
+	case "prevMonth":
+		
+	}
 	middleware.IsAdminMiddlewareCallback(HandleCallbackQueryAdmin, HandleCallbackQueryUser)(bot, callback)
 }

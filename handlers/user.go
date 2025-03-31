@@ -52,24 +52,17 @@ func HandleCallbackQueryUser(bot *tgbotapi.BotAPI, callback *tgbotapi.CallbackQu
 	}
     bot.Send(editmsg)
 }
-func HandleCommand(bot *tgbotapi.BotAPI, update *tgbotapi.Update) {
+func AppointmentsUser(bot *tgbotapi.BotAPI, update *tgbotapi.Update) {
 	var msg tgbotapi.MessageConfig
-	switch update.Message.Command() {
-	case "start":
-		msg = tgbotapi.NewMessage(update.Message.Chat.ID, "Выберите дату")
-		msg.ReplyMarkup = CreateMonthKeyboard(0)
-	case  "getAppointment":
-		userid := int(update.Message.From.ID)
-
-		t := database.GetAppointmentUser(userid)
-		if t.Year() == 1 {
-			msg = tgbotapi.NewMessage(update.Message.Chat.ID, "У вас нету записей")
-			msg.ReplyMarkup = NoAppointments()
-		} else {
-			s := fmt.Sprintf("Ваша запись на %d:00 %s %d", t.Hour(), months[int(t.Month())], t.Day())
-			msg = tgbotapi.NewMessage(update.Message.Chat.ID, s)
-			msg.ReplyMarkup = CreateUserAppointment()
-		}
-	}
+	userid := int(update.Message.From.ID)
+	t := database.GetAppointmentUser(userid)
+	if t.Year() == 1 {
+		msg = tgbotapi.NewMessage(update.Message.Chat.ID, "У вас нету записей")
+		msg.ReplyMarkup = NoAppointments()
+	} else {
+		s := fmt.Sprintf("Ваша запись на %d:00 %s %d", t.Hour(), months[int(t.Month())], t.Day())
+		msg = tgbotapi.NewMessage(update.Message.Chat.ID, s)
+		msg.ReplyMarkup = CreateUserAppointment()
+	}		
 	bot.Send(msg)
 }
